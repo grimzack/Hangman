@@ -34,10 +34,13 @@ public class GameBoard
         boolean isInCorrectGuesses = false;
         boolean isInWrongGuesses = false;
 
-        for (Character letter : rightCharsGuessed) {
-            if (letter == charGuess) {
-                isInCorrectGuesses = true;
-                break;
+        // TODO: Need to cover cases where guess lists are empty
+        if (rightCharsGuessed.isEmpty()) {
+            for (Character letter : rightCharsGuessed) {
+                if (letter == charGuess) {
+                    isInCorrectGuesses = true;
+                    break;
+                }
             }
         }
 

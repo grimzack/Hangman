@@ -18,7 +18,7 @@ public class Main {
                     String curAnswer = board.getAnswer();
                     if (!(curAnswer.equals(""))) {
                         System.out.println("Answer already exists. Continue and replace? (y\\n\n");
-                        char decision = (char) scanner.nextByte();
+                        char decision = scanner.next().charAt(0);
                         if (decision == 'n') {
                             System.out.println("Not replacing word.\n");
                             break;
@@ -30,7 +30,7 @@ public class Main {
                     break;
                 case 2:
                     System.out.println("Please enter a letter: ");
-                    char guess = (char) scanner.nextByte();
+                    char guess = scanner.next().charAt(0);
                     board.Guess(guess);
                     break;
                 case 3:

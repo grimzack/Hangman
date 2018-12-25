@@ -2,8 +2,8 @@ package Hangman;
 
 import java.util.List;
 
-public class GameBoard
-{
+public class GameBoard {
+
     // Word to be guessed
     private String answer;
 
@@ -16,8 +16,7 @@ public class GameBoard
 
     private boolean isWinner;
 
-    GameBoard()
-    {
+    GameBoard() {
         this.setAnswer("");
         this.numGuesses = 0;
         this.rightCharsGuessed = "";
@@ -25,49 +24,27 @@ public class GameBoard
         isWinner = false;
     }
 
-    public void PrintOptions()
-    {
-        System.out.println("Welcome to Hangman! Please choose one of the following options:\n" +
-                "1. New Word\n" +
-                "2. Guess Letter\n" +
-                "3. Print Board\n" +
-                "4. Exit\n");
+    /**
+     * newGame method creates a new game of Hangman.
+     * Clicking the New Game button will replace the
+     * word being guessed, clear all existing guesses
+     * and refresh the game board.
+     *
+     * @param newAnswer String representing the new word to guess.
+     */
+    public void newGame(String newAnswer) {
+        //TODO: Clear existing clue and guess lists and prompt for a new word.
+        setAnswer(newAnswer);
+        clearExistingGame();
     }
 
-    // Method to handle a user guess. Returns 'true' if the guess is valid.
-    // TODO: Make this smarter.
-    public boolean Guess(Character charGuess) {
-
-        // Check if guess has been guessed already
-        if (this.rightCharsGuessed.contains(charGuess.toString()) ||
-            this.wrongCharsGuessed.contains(charGuess.toString())) {
-            System.out.println("Character already guessed!");
-            return false;
-        }
-
-        if (this.answer.contains(charGuess.toString())) {
-            // TODO: Reveal some of the answer
-            rightCharsGuessed += charGuess.toString();
-            if (rightCharsGuessed.equals(answer)) {
-                this.isWinner = true;
-                this.ProcessGameOver();
-                return true;
-            }
-            return true;
-        } else {
-            this.wrongCharsGuessed += charGuess.toString();
-            return true;
-        }
-
+    public void clearExistingGame() {
+        setRightCharsGuessed("");
+        setWrongCharsGuessed("");
+        setNumGuesses(0);
     }
 
-    public void printState()
-    {
-        System.out.println("Answer: " + getAnswer() + "\n" +
-                            "Number of Guesses: " + numGuesses + "\n" +
-                            "Letters guessed (right: wrong): " + rightCharsGuessed + ": " + wrongCharsGuessed);
-    }
-
+    // Getters and Setters
     public String getAnswer() {
         return answer;
     }
@@ -76,7 +53,27 @@ public class GameBoard
         this.answer = answer;
     }
 
-    private void ProcessGameOver() {
-        System.out.println("Game over! You " + (this.isWinner ? "Won!" : "Lost :("));
+    public String getRightCharsGuessed() {
+        return rightCharsGuessed;
+    }
+
+    public void setRightCharsGuessed(String rightCharsGuessed) {
+        this.rightCharsGuessed = rightCharsGuessed;
+    }
+
+    public String getWrongCharsGuessed() {
+        return wrongCharsGuessed;
+    }
+
+    public void setWrongCharsGuessed(String wrongCharsGuessed) {
+        this.wrongCharsGuessed = wrongCharsGuessed;
+    }
+
+    public int getNumGuesses() {
+        return numGuesses;
+    }
+
+    public void setNumGuesses(int numGuesses) {
+        this.numGuesses = numGuesses;
     }
 }

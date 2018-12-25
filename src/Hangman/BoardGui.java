@@ -1,6 +1,8 @@
 package Hangman;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 // Class to draw the Hangman GUI
 public class BoardGui {
@@ -33,7 +35,6 @@ public class BoardGui {
         // Add a content panel
         JPanel gameMenuPanel = new JPanel();
 
-
         // Add buttons for each function
         JButton newGameButton = new JButton("New Game");
         newGameButton.setBounds(NEW_GAME_X, NEW_GAME_Y, NEW_GAME_WIDTH, NEW_GAME_HEIGHT);
@@ -49,14 +50,38 @@ public class BoardGui {
         gameMenuPanel.add(submitButton);
         gameMenuPanel.add(exitButton);
 
-        // TODO: Add event listeners to the buttons
-        
+        //  Add event listeners to the buttons
+        newGameButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+
         // Add panel to the frame
         frame.add(gameMenuPanel);
 
         // Display the window
         frame.pack();
         frame.setVisible(true);
+    }
+
+    private JMenuItem newGameItem = new JMenuItem("New Game");
+    private JMenuItem exitGameItem = new JMenuItem("Exit Game");
+
+    public static void createGameMenu() {
+        JFrame menuWindow = new JFrame("Hangman Game");
+        JMenuBar menuBar = new JMenuBar();
+        JMenu gameMenu = new JMenu("Game Options");
+
+        gameMenu.add(newGameItem);
+        gameMenu.add(exitGameItem);
+
+        menuBar.add(gameMenu);
+
+        menuWindow.setJMenuBar(menuBar);
+        menuWindow.setSize(300, 100);
+        menuWindow.setVisible(true);
     }
 
 }

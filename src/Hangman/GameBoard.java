@@ -11,13 +11,18 @@ public class GameBoard
     private int numGuesses;
 
     // Letters guessed so far
-    private List<Character> rightCharsGuessed;
-    private List<Character> wrongCharsGuessed;
+    private String rightCharsGuessed;
+    private String wrongCharsGuessed;
+
+    private boolean isWinner;
 
     GameBoard()
     {
         this.setAnswer("");
         this.numGuesses = 0;
+        this.rightCharsGuessed = "";
+        this.wrongCharsGuessed = "";
+        isWinner = false;
     }
 
     public void PrintOptions()
@@ -29,50 +34,31 @@ public class GameBoard
                 "4. Exit\n");
     }
 
-    public void Guess(Character charGuess) {
-        // TODO: Make this smarter.
-        boolean isInCorrectGuesses = false;
-        boolean isInWrongGuesses = false;
+    // Method to handle a user guess. Returns 'true' if the guess is valid.
+    // TODO: Make this smarter.
+    public boolean Guess(Character charGuess) {
 
-        // TODO: Need to cover cases where guess lists are empty
-        if (rightCharsGuessed.isEmpty()) {
-            for (Character letter : rightCharsGuessed) {
-                if (letter == charGuess) {
-                    isInCorrectGuesses = true;
-                    break;
-                }
+        // Check if guess has been guessed already
+        if (this.rightCharsGuessed.contains(charGuess.toString()) ||
+            this.wrongCharsGuessed.contains(charGuess.toString())) {
+            System.out.println("Character already guessed!");
+            return false;
+        }
+
+        if (this.answer.contains(charGuess.toString())) {
+            // TODO: Reveal some of the answer
+            rightCharsGuessed += charGuess.toString();
+            if (rightCharsGuessed.equals(answer)) {
+                this.isWinner = true;
+                this.ProcessGameOver();
+                return true;
             }
+            return true;
+        } else {
+            this.wrongCharsGuessed += charGuess.toString();
+            return true;
         }
 
-        if (isInCorrectGuesses) {
-            System.out.println("Already guessed, and is in the answer!");
-        }
-
-        for (Character letter2 : wrongCharsGuessed) {
-            if (letter2 == charGuess) {
-                isInWrongGuesses = true;
-                break;
-            }
-        }
-
-        if (isInWrongGuesses)
-        {
-            System.out.println("Already guessed, wrong answer!");
-        }
-
-        if ((!isInCorrectGuesses) && (!isInWrongGuesses))
-        {
-            // Guessed a new character
-            this.numGuesses++;
-            if ((Boolean) this.getAnswer().contains(Character.toString(charGuess)))
-            {
-                rightCharsGuessed.add(charGuess);
-            }
-            else
-            {
-                wrongCharsGuessed.add(charGuess);
-            }
-        }
     }
 
     public void printState()
@@ -88,5 +74,9 @@ public class GameBoard
 
     public void setAnswer(String answer) {
         this.answer = answer;
+    }
+
+    private void ProcessGameOver() {
+        System.out.println("Game over! You " + (this.isWinner ? "Won!" : "Lost :("));
     }
 }

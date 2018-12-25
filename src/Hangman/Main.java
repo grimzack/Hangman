@@ -1,11 +1,20 @@
 package Hangman;
 
 import Hangman.GameBoard;
-
 import java.util.Scanner;
+import Hangman.BoardGui;
+
+import javax.swing.*;
 
 public class Main {
     public static void main(String[] args) {
+        // Schedule a job for the event-dispatching thread:
+        // creating and showing this application's GUI
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            BoardGui.createAndShowGui();
+        });
+    }
+    /*
         GameBoard board = new GameBoard();
         Scanner scanner = new Scanner(System.in);
 
@@ -29,9 +38,13 @@ public class Main {
                     board.setAnswer(temp);
                     break;
                 case 2:
-                    System.out.println("Please enter a letter: ");
-                    char guess = scanner.next().charAt(0);
-                    board.Guess(guess);
+                    boolean goodGuess = false;
+                    char guess;
+                    while (!goodGuess) {
+                        System.out.println("Please enter a letter: ");
+                        guess = scanner.next().charAt(0);
+                        goodGuess = board.Guess(guess);
+                    }
                     break;
                 case 3:
                     System.out.println("Current state: ");
@@ -43,5 +56,5 @@ public class Main {
 
             }
         }
-    }
+    }*/
 }

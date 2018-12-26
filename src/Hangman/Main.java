@@ -11,8 +11,8 @@ public class Main {
         // Schedule a job for the event-dispatching thread:
         // creating and showing this application's GUI
         javax.swing.SwingUtilities.invokeLater(() -> {
-//            BoardGui.createAndShowGui();
-            BoardGui.createGameMenu();
+            BoardGui.createAndShowGui();
+//            BoardGui.createGameMenu();
         });
     }
     /*

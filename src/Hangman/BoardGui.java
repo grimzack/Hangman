@@ -47,6 +47,11 @@ public class BoardGui {
 //        JLabel label = new JLabel("Hangman Game", hangmanIcon, 0);
 //        frame.getContentPane().add(label);
 
+        // Text area for displaying current answer
+        JTextArea answerString = new JTextArea();
+        answerString.setEditable(false);
+        answerString.setText(currentGame.getDisplayableAnswerString());
+
         // Add buttons for each function
         JButton newGameButton = new JButton("New Game");
         newGameButton.setBounds(NEW_GAME_X, NEW_GAME_Y, NEW_GAME_WIDTH, NEW_GAME_HEIGHT);
@@ -64,11 +69,15 @@ public class BoardGui {
         newGameButton.addActionListener(e -> {
             String userInput = (String) JOptionPane.showInputDialog(frame, "Enter the new word:");
             currentGame.newGame(userInput);
+            answerString.setText(currentGame.getDisplayableAnswerString());
+            answerString.update(answerString.getGraphics());
         });
 
         submitButton.addActionListener(e -> {
             String userInput = (String) JOptionPane.showInputDialog(frame, "Guess a letter:");
             currentGame.guess(userInput);
+            answerString.setText(currentGame.getDisplayableAnswerString());
+            answerString.update(answerString.getGraphics());
         });
 
         exitButton.addActionListener(e -> {
@@ -86,6 +95,7 @@ public class BoardGui {
 
         // Add components to the panel
         gameMenuPanel.add(label);
+        gameMenuPanel.add(answerString);
         gameMenuPanel.add(newGameButton);
         gameMenuPanel.add(submitButton);
         gameMenuPanel.add(exitButton);

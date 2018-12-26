@@ -91,6 +91,7 @@ public class GameBoard {
 
         if (answer.contains(userGuess)) {
             // TODO: Figure out how to reveal letters
+            rightCharsGuessed += userGuess;
         }
 
         // Guess was valid but incorrect
@@ -101,6 +102,20 @@ public class GameBoard {
     // Getters and Setters
     public String getAnswer() {
         return answer;
+    }
+
+    // Print out answer string. If correct answer has not been guessed, print '_' character.
+    public String getDisplayableAnswerString() {
+        String printedAnswerString = "";
+        for (int i = 0; i < answer.length() - 1; i++) {
+            if (rightCharsGuessed.contains("" + answer.charAt(i))) {
+                printedAnswerString += answer.charAt(i);
+            } else {
+                printedAnswerString += " _ ";
+            }
+        }
+
+        return printedAnswerString;
     }
 
     public void setAnswer(String answer) {

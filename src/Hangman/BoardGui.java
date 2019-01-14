@@ -1,129 +1,75 @@
 package Hangman;
 
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+//import javax.swing.*;
+//import java.awt.event.ActionEvent;
+//import java.awt.event.ActionListener;
+
+
+
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+
 
 // Class to draw the Hangman GUI
-public class BoardGui {
+public class BoardGui extends Application {
 
     // Hangman Game Instance
     private static GameBoard currentGame;
 
-    // Static locations of buttons
-    public static final int NEW_GAME_X = 0;
-    public static final int NEW_GAME_Y = 0;
-    public static final int NEW_GAME_WIDTH = 100;
-    public static final int NEW_GAME_HEIGHT = 30;
+    // Game Buttons
+    Button newGameButton, exitButton;
 
-//    public static final int PRINT_BUTTON_X = NEW_GAME_X + NEW_GAME_WIDTH + 10;
-//    public static final int PRINT_BUTTON_Y = NEW_GAME_Y;
-//    public static final int PRINT_BUTTON_WIDTH = NEW_GAME_WIDTH;
-//    public static final int PRINT_BUTTON_HEIGHT = NEW_GAME_HEIGHT;
+    // Game Screens
+    Scene mainMenu, gameScreen;
 
-    public static final int SUBMIT_X = NEW_GAME_X;// + NEW_GAME_WIDTH + 10;
-    public static final int SUBMIT_Y = NEW_GAME_Y + NEW_GAME_HEIGHT + 10;
-    public static final int SUBMIT_WIDTH = NEW_GAME_WIDTH;
-    public static final int SUBMIT_HEIGHT = NEW_GAME_HEIGHT;
-
-    public static final int EXIT_X = NEW_GAME_X;// + SUBMIT_WIDTH + 10;
-    public static final int EXIT_Y = SUBMIT_Y + SUBMIT_HEIGHT + 10;
-    public static final int EXIT_WIDTH = NEW_GAME_WIDTH;
-    public static final int EXIT_HEIGHT = NEW_GAME_HEIGHT;
-
-    public static void createAndShowGui() {
-        // Initialization of game board
+    public void BoardGui() {
         currentGame = new GameBoard();
-
-        // Create and set up the window
-        JFrame frame = new JFrame("Hangman Game");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLocationRelativeTo(null);
-
-//        // Icon for JLabel
-//        ImageIcon hangmanIcon = new ImageIcon("C:/Users/Admin/Documents/CodePractice/Java/Hangman/emptyGallow.gif");
-//
-//        // Add a label
-//        JLabel label = new JLabel("Hangman Game", hangmanIcon, 0);
-//        frame.getContentPane().add(label);
-
-        // Text area for displaying current answer
-        JTextArea answerString = new JTextArea();
-        answerString.setEditable(false);
-        answerString.setText(currentGame.getDisplayableAnswerString());
-
-        // Add buttons for each function
-        JButton newGameButton = new JButton("New Game");
-        newGameButton.setBounds(NEW_GAME_X, NEW_GAME_Y, NEW_GAME_WIDTH, NEW_GAME_HEIGHT);
-
-//        JButton printButton = new JButton("Print Board");
-//        printButton.setBounds(PRINT_BUTTON_X, PRINT_BUTTON_Y, PRINT_BUTTON_WIDTH, PRINT_BUTTON_HEIGHT);
-
-        JButton submitButton = new JButton("Submit Guess");
-        submitButton.setBounds(SUBMIT_X, SUBMIT_Y, SUBMIT_WIDTH, SUBMIT_HEIGHT);
-
-        JButton exitButton = new JButton("Exit Game");
-        exitButton.setBounds(EXIT_X, EXIT_Y, EXIT_WIDTH, EXIT_HEIGHT);
-
-        //  Add event listeners to the buttons
-        newGameButton.addActionListener(e -> {
-            String userInput = (String) JOptionPane.showInputDialog(frame, "Enter the new word:");
-            currentGame.newGame(userInput);
-            answerString.setText(currentGame.getDisplayableAnswerString());
-            answerString.update(answerString.getGraphics());
-        });
-
-        submitButton.addActionListener(e -> {
-            String userInput = (String) JOptionPane.showInputDialog(frame, "Guess a letter:");
-            currentGame.guess(userInput);
-            answerString.setText(currentGame.getDisplayableAnswerString());
-            answerString.update(answerString.getGraphics());
-        });
-
-        exitButton.addActionListener(e -> {
-            System.exit(0);
-        });
-
-        // Icon for JLabel
-        ImageIcon hangmanIcon = new ImageIcon("C:/Users/Admin/Documents/CodePractice/Java/Hangman/emptyGallow.gif");
-
-        // Add a label
-        JLabel label = new JLabel("Hangman Game", hangmanIcon, 0);
-
-        // Add a content panel
-        JPanel gameMenuPanel = new JPanel();
-
-        // Add components to the panel
-        gameMenuPanel.add(label);
-        gameMenuPanel.add(answerString);
-        gameMenuPanel.add(newGameButton);
-        gameMenuPanel.add(submitButton);
-        gameMenuPanel.add(exitButton);
-
-        // Add panel to the frame
-        frame.add(gameMenuPanel);
-
-        // Display the window
-        frame.pack();
-        frame.setVisible(true);
     }
 
-    public static void createGameMenu() {
-        JFrame menuWindow = new JFrame("Hangman Game");
-        JMenuBar menuBar = new JMenuBar();
-        JMenu gameMenu = new JMenu("Game Options");
+    public void start(Stage primaryStage) throws Exception {
+        currentGame = new GameBoard();
 
-        JMenuItem newGameItem = new JMenuItem("New Game");
-        JMenuItem exitGameItem = new JMenuItem("Exit Game");
+        primaryStage.setTitle("Hangman Game");
 
-        gameMenu.add(newGameItem);
-        gameMenu.add(exitGameItem);
+        TextField userInputField = new TextField();
 
-        menuBar.add(gameMenu);
+        newGameButton = new Button("New Game");
 
-        menuWindow.setJMenuBar(menuBar);
-        menuWindow.setSize(300, 100);
-        menuWindow.setVisible(true);
+        exitButton = new Button("Exit");
+        exitButton.setOnAction(e -> {
+            System.out.println("Exiting");
+            return;
+        });
+
+        StackPane layout = new StackPane();
+        HBox menuBox = new HBox();
+        
+        // Add components to the HBox
+        menuBox.getChildren().add(userInputField);
+        menuBox.getChildren().add(newGameButton);
+        menuBox.getChildren().add(exitButton);
+
+        layout.getChildren().add(menuBox);
+        layout.setAlignment(Pos.CENTER);
+
+        mainMenu = new Scene(layout, 300, 250);
+
+        primaryStage.setScene(mainMenu);
+
+        newGameButton.setOnAction(e -> {
+            String gameString = userInputField.getText();
+            currentGame.newGame(gameString);
+        });
+
+        primaryStage.show();
     }
 
 }

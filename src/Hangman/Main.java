@@ -6,14 +6,20 @@ import Hangman.BoardGui;
 
 import javax.swing.*;
 
+import static javafx.application.Application.launch;
+
 public class Main {
     public static void main(String[] args) {
         // Schedule a job for the event-dispatching thread:
         // creating and showing this application's GUI
-        javax.swing.SwingUtilities.invokeLater(() -> {
-            BoardGui.createAndShowGui();
-//            BoardGui.createGameMenu();
-        });
+//        javax.swing.SwingUtilities.invokeLater(() -> {
+//            BoardGui.createAndShowGui();
+////            BoardGui.createGameMenu();
+//        });
+
+        BoardGui newGui = new BoardGui();
+
+        newGui.launch(args);
     }
     /*
         GameBoard board = new GameBoard();

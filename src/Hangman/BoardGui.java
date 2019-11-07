@@ -13,7 +13,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -32,6 +31,8 @@ public class BoardGui extends Application {
     private String TITLE_TEXT = "Hangman Game";
     private String NEW_GAME_IMAGE_LOCATION = "src/Resources/emptyGallow.gif";
 
+    private String GUESS_TEXT = "Most Recent Guess: ";
+
     // Hangman Game Instance
     private static GameBoard currentGame;
 
@@ -45,10 +46,14 @@ public class BoardGui extends Application {
     private TextField newGameField, inputField;
 
     // Guess Displays
-    private Label lettersGuessed, lettersRevealed;
+    private Label mostRecentGuessLabel, lettersRevealed;
 
     // Game StackPanes
     private StackPane mainMenuStackPane, gameScreenStackPane;
+
+    // Boxes
+    VBox gamePlayBox;
+    VBox menuBox;
 
     // Player information
     private String gameString, previousGuess, currentGuess;
@@ -66,21 +71,9 @@ public class BoardGui extends Application {
         primaryStage.show();
     }
 
-        private void handleGuess() {
-        // This method's goals:
-        //  1. Clear the input field
-        inputField.clear();
-
-        //  2. Post the guess to a label
-
-        //  3. Check whether the guess is good
-        //  4. Progress the  game state if good or bad guess
-
-    }
-
     private void setUpMainMenu(Stage stage) {
-        StackPane layout = new StackPane();
-        VBox menuBox = new VBox();
+        mainMenuStackPane = new StackPane();
+        menuBox = new VBox();
         newGameField = new TextField();
 
         // Add components to the HBox
@@ -94,16 +87,18 @@ public class BoardGui extends Application {
             stage.setScene(gameScreen);
         });
 
-        layout.getChildren().add(menuBox);
-        layout.setAlignment(Pos.CENTER);
+        mainMenuStackPane.getChildren().add(menuBox);
+        mainMenuStackPane.setAlignment(Pos.CENTER);
 
-        mainMenu = new Scene(layout, 600, 300);
+        mainMenu = new Scene(mainMenuStackPane, 600, 600);
 
         stage.setScene(mainMenu);
     }
 
     private void setUpGameScreen() {
-        HBox gameBox = new HBox();
+        gamePlayBox = new VBox();
+        mostRecentGuessLabel = new Label(GUESS_TEXT);
+
         FileInputStream localFile = null;
         try {
             localFile = new FileInputStream(NEW_GAME_IMAGE_LOCATION);
@@ -114,19 +109,21 @@ public class BoardGui extends Application {
         inputField = new TextField();
         inputField.textProperty().addListener(((observable, oldValue, newValue) -> {
             previousGuess = oldValue;
-            currentGuess = inputField.getText();
+            currentGuess = newValue;
             handleGuess();
+            inputField.clear();
         }));
 
-        gameBox.getChildren().add(inputField);
-        gameBox.getChildren().add(gameScreenExitButton);
+        gamePlayBox.getChildren().add(inputField);
+        gamePlayBox.getChildren().add(gameScreenExitButton);
+        gamePlayBox.getChildren().add(mostRecentGuessLabel);
+        gamePlayBox.getChildren().add(newGameImage);
 
-        StackPane gameBoardLayout = new StackPane();
-        gameBoardLayout.getChildren().add(gameBox);
+        gameScreenStackPane = new StackPane();
+        gameScreenStackPane.getChildren().add(gamePlayBox);
 
-        gameBox.getChildren().add(newGameImage);
 
-        gameScreen = new Scene(gameBoardLayout, 600, 300);
+        gameScreen = new Scene(gameScreenStackPane, 600, 600);
     }
 
     private void createButtons(Stage stage) {
@@ -135,6 +132,20 @@ public class BoardGui extends Application {
         gameScreenExitButton.setOnAction(e -> stage.close());
         mainMenuExitButton = new Button(EXIT_BUTTON_TEXT);
         mainMenuExitButton.setOnAction(e -> stage.close());
+
+    }
+
+    private void handleGuess() {
+        // This method's goals:
+        //  1. Clear the input field
+//        inputField.clear();
+
+        //  2. Post the guess to a label
+        String previouslyGuessed = mostRecentGuessLabel.getText();
+        mostRecentGuessLabel.setText(GUESS_TEXT + currentGuess);
+
+        //  3. Check whether the guess is good
+        //  4. Progress the  game state if good or bad guess
 
     }
 }

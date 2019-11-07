@@ -5,13 +5,11 @@ package Hangman;
 //import java.awt.event.ActionListener;
 
 
-
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -20,71 +18,123 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
 
 // Class to draw the Hangman GUI
 public class BoardGui extends Application {
+
+    // Constants
+    private String NEW_GAME_BUTTON_TEXT = "New Game";
+    private String EXIT_BUTTON_TEXT = "Exit";
+
+    private String TITLE_TEXT = "Hangman Game";
+    private String NEW_GAME_IMAGE_LOCATION = "src/Resources/emptyGallow.gif";
 
     // Hangman Game Instance
     private static GameBoard currentGame;
 
     // Game Buttons
-    Button newGameButton, exitButton;
+    private Button newGameButton, mainMenuExitButton, gameScreenExitButton;
 
     // Game Screens
-    Scene mainMenu, gameScreen;
+    private Scene mainMenu, gameScreen;
+
+    // Player input field
+    private TextField newGameField, inputField;
+
+    // Guess Displays
+    private Label lettersGuessed, lettersRevealed;
+
+    // Game StackPanes
+    private StackPane mainMenuStackPane, gameScreenStackPane;
+
+    // Player information
+    private String gameString, previousGuess, currentGuess;
 
     public void start(Stage primaryStage) throws Exception {
         currentGame = new GameBoard();
+        primaryStage.setTitle(TITLE_TEXT);
 
-        primaryStage.setTitle("Hangman Game");
+        createButtons(primaryStage);
 
-        TextField userInputField = new TextField();
+        setUpMainMenu(primaryStage);
 
-        newGameButton = new Button("New Game");
+        setUpGameScreen();
 
-        exitButton = new Button("Exit");
-        exitButton.setOnAction(e -> {
-            primaryStage.close();
-        });
+        primaryStage.show();
+    }
 
+        private void handleGuess() {
+        // This method's goals:
+        //  1. Clear the input field
+        inputField.clear();
+
+        //  2. Post the guess to a label
+
+        //  3. Check whether the guess is good
+        //  4. Progress the  game state if good or bad guess
+
+    }
+
+    private void setUpMainMenu(Stage stage) {
         StackPane layout = new StackPane();
-        HBox menuBox = new HBox();
-        
+        VBox menuBox = new VBox();
+        newGameField = new TextField();
+
         // Add components to the HBox
-        menuBox.getChildren().add(userInputField);
+        menuBox.getChildren().add(newGameField);
         menuBox.getChildren().add(newGameButton);
-        menuBox.getChildren().add(exitButton);
+        menuBox.getChildren().add(mainMenuExitButton);
+
+        newGameButton.setOnAction(e -> {
+            gameString = newGameField.getText();
+            currentGame.newGame(gameString);
+            stage.setScene(gameScreen);
+        });
 
         layout.getChildren().add(menuBox);
         layout.setAlignment(Pos.CENTER);
 
         mainMenu = new Scene(layout, 600, 300);
 
-        primaryStage.setScene(mainMenu);
+        stage.setScene(mainMenu);
+    }
 
-        // Now add the game screen
-        // This is more complicated because it requires the gamestate gifs...
-        // Initial screen will be empty gallow
-        VBox gameBox = new VBox();
-        ImageView newGameImage = new ImageView(new Image("file:emptyGallow.gif"));
-        TextField guessField = new TextField();
+    private void setUpGameScreen() {
+        HBox gameBox = new HBox();
+        FileInputStream localFile = null;
+        try {
+            localFile = new FileInputStream(NEW_GAME_IMAGE_LOCATION);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        ImageView newGameImage = new ImageView(new Image(localFile));
+        inputField = new TextField();
+        inputField.textProperty().addListener(((observable, oldValue, newValue) -> {
+            previousGuess = oldValue;
+            currentGuess = inputField.getText();
+            handleGuess();
+        }));
 
-        gameBox.getChildren().add(newGameImage);
-        gameBox.getChildren().add(guessField);
+        gameBox.getChildren().add(inputField);
+        gameBox.getChildren().add(gameScreenExitButton);
 
         StackPane gameBoardLayout = new StackPane();
         gameBoardLayout.getChildren().add(gameBox);
 
+        gameBox.getChildren().add(newGameImage);
+
         gameScreen = new Scene(gameBoardLayout, 600, 300);
-
-        newGameButton.setOnAction(e -> {
-            String gameString = userInputField.getText();
-            currentGame.newGame(gameString);
-            primaryStage.setScene(gameScreen);
-
-        });
-
-        primaryStage.show();
     }
 
+    private void createButtons(Stage stage) {
+        newGameButton = new Button(NEW_GAME_BUTTON_TEXT);
+        gameScreenExitButton = new Button(EXIT_BUTTON_TEXT);
+        gameScreenExitButton.setOnAction(e -> stage.close());
+        mainMenuExitButton = new Button(EXIT_BUTTON_TEXT);
+        mainMenuExitButton.setOnAction(e -> stage.close());
+
+    }
 }

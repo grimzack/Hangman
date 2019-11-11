@@ -1,8 +1,7 @@
-package Util;
+package util;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.text.Document;
 
 /**
  * Class to listen for user input.
